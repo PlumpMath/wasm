@@ -1,5 +1,5 @@
 ## Web Assembly
-This is a guide that describes how to build [wasm](https://webassembly.github.io/) binaries on Windows.
+Instructions how to build [wasm](https://webassembly.github.io/) binaries on Windows.
 
 * Install Python.
 * Install Visual Studio 2015 with **Git**, **Python**, **Java** and **Node.js**.
