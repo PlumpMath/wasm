@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Web Assembly</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width" />
+  <link rel="shortcut icon" href="/favicon.ico">
+  <script src="main.js" defer></script>
+  <style>
+    html, body, #canvas {
+      margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    }
+    html {
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    function stdout(text) {
+      console.log("stdout:", text);
+    }
+
+    function stderr(text) {
+      console.log("stderr:", text);
+    }
+
+    function status(text) {
+      console.log("status:", text);
+    }
+
+    var module = null;
+    var canvas = document.getElementById('canvas');
+    
+    function initialize() {
+      if (typeof main === "function" && module !== null) {
+        main({ print: stdout, printErr: stderr, setStatus: status, canvas: canvas, wasmBinary: module });
+        module = null;
+      }
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "main.wasm", true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status !== 200) {
+          stderr(xhr.statusText);
+          return;
+        }
+        module = xhr.response;
+        initialize();
+      }
+    };
+    xhr.send(null);
+
+    //window.fetch("main.wasm").then(function(response) {
+    //  return response.arrayBuffer();
+    //}).then(function(data) {
+    //  binary = data;
+    //  initialize();
+    //});
+
+    document.addEventListener("DOMContentLoaded", initialize);
+  </script>
+</body>
+</html>
